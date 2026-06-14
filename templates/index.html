@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Netra — Sound for Sight | Currency Detection</title>
+  <meta name="description" content="Netra turns a phone camera into a voice. Using computer vision and machine learning, it lets visually impaired people independently verify currency denominations aloud." />
+  
+  <link rel="icon" href="{{ url_for('static', filename='logo-light.png') }}" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="{{ url_for('static', filename='logo-dark.png') }}" media="(prefers-color-scheme: dark)">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="brand" href="#top" aria-label="Netra home">
+        <img src="{{ url_for('static', filename='logo-light.png') }}" class="nav-logo light-mode-logo" alt="" aria-hidden="true">
+        <img src="{{ url_for('static', filename='logo-dark.png') }}" class="nav-logo dark-mode-logo" alt="" aria-hidden="true">
+        Netra
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#demo">Live Demo</a>
+        <a href="#how">How It Works</a>
+        <a href="#impact">Impact</a>
+        <a href="#future">Future</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Switch to dark mode">
+        <svg class="icon-sun" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+        <svg class="icon-moon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <span id="top"></span>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <p class="label">Computer Vision · Machine Learning · Text-to-Speech</p>
+        <h1 id="hero-title">See with <em>sound.</em></h1>
+        <div class="hero__meta" aria-hidden="true">
+          <span class="sq"></span>
+          <span class="barline"></span>
+        </div>
+        <p class="lead">Visually impaired people face real vulnerability whenever they must rely on someone else to see for them. Netra turns any phone camera into a voice — independently verifying currency denominations aloud to secure economic autonomy.</p>
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#demo">Try the Live Demo &rarr;</a>
+          <a class="btn btn--ghost" href="#how">How it works</a>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule rule--ultra" />
+
+    <section class="demo" id="demo" aria-labelledby="demo-title">
+      <div class="container">
+        <div class="demo__grid">
+          <div>
+            <div class="phone" role="img" aria-label="Simulated mobile camera interface">
+              <div class="phone__notch" aria-hidden="true"></div>
+              <div class="viewfinder" id="viewfinder">
+                <div class="viewfinder__art" id="vfArt"><span>Point camera at a currency note</span></div>
+                <div class="scanline" aria-hidden="true"></div>
+                <div class="bbox" id="bbox" data-tag="contour" aria-hidden="true"></div>
+              </div>
+              <p class="status" id="status" aria-hidden="true">Ready.</p>
+            </div>
+          </div>
+          <div class="demo__panel">
+            <span class="label">The Live Demo</span>
+            <h2 id="demo-title">Scan it. Hear it.</h2>
+            <p class="lead" style="margin-bottom:0;">Press the button below. Netra simulates the OpenCV pipeline — orientation fixing, center cropping, and feature extraction — then classifies the note and speaks the result aloud.</p>
+            <div class="demo__buttons">
+              <form id="scanCurrencyForm" style="flex: 1 1 auto;">
+                <button class="btn btn--primary w-100" id="scanCurrency" type="submit" aria-label="Scan currency and announce the denomination aloud">Scan Currency</button>
+              </form>
+            </div>
+            <div class="result" aria-live="polite">
+              <span class="label">Audio Output</span>
+              <span class="result__text" id="resultText">Awaiting scan&hellip;</span>
+              <span class="result__sub" id="resultSub">Tap the button to begin.</span>
+            </div>
+            <p class="hint">Ensure your volume is on. Audio is synthesized by the backend engine.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <section id="how" aria-labelledby="how-title">
+      <div class="container">
+        <div class="kicker">
+          <span class="label">Architecture</span>
+          <h2 id="how-title">How It Works</h2>
+          <p class="lead">A single, lightweight pipeline runs entirely on a standard smartphone — from camera frame to spoken answer in seconds.</p>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <span class="step__num">01</span>
+            <h3>Input</h3>
+            <p>The phone camera captures a high-resolution frame of the target currency note.</p>
+          </article>
+          <article class="step">
+            <span class="step__num">02</span>
+            <h3>OpenCV Processing</h3>
+            <p>The image is automatically rotated to landscape mode, cropped to isolate the center, and standardized.</p>
+          </article>
+          <article class="step">
+            <span class="step__num">03</span>
+            <h3>ML Classification</h3>
+            <p>A Scikit-learn Random Forest classifier matches the extracted visual DNA against the trained currency dataset.</p>
+          </article>
+          <article class="step">
+            <span class="step__num">04</span>
+            <h3>Audio Output</h3>
+            <p>Text-to-speech announces the result, built on TalkBack and VoiceOver accessibility principles.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <section class="impact" id="impact" aria-labelledby="impact-title">
+      <div class="container">
+        <div class="kicker">
+          <span class="label">Impact &amp; Advantages</span>
+          <h2 id="impact-title">Independence, by design.</h2>
+          <p class="lead">Built around one of life's highest-risk daily tasks — and engineered to reach everyone who needs it.</p>
+        </div>
+        <div class="grid">
+          <article class="feature">
+            <div class="feature__icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h3>Economic Security</h3>
+            <p>Independently confirm the denomination of every note. No more being short-changed, handed fakes, or relying on a stranger's honesty.</p>
+          </article>
+          <article class="feature">
+            <div class="feature__icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Absolute Privacy</h3>
+            <p>Processing can happen locally. No images need to be stored or sent to external corporate clouds. Your financial context remains strictly your own.</p>
+          </article>
+          <article class="feature">
+            <div class="feature__icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="2" width="12" height="20"/><path d="M10 19h4"/></svg>
+            </div>
+            <h3>Runs On Any Phone</h3>
+            <p>No special hardware, no physical add-ons. Built to run efficiently using a camera that is already in the user's pocket.</p>
+          </article>
+          <article class="feature">
+            <div class="feature__icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
+            </div>
+            <h3>OS-Agnostic &amp; Cheap</h3>
+            <p>Designed to be compatible with Android TalkBack and iOS VoiceOver. Cost-efficient and accessible to all devices.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <section class="quote" aria-label="Mission statement">
+      <div class="container">
+        <blockquote>Dignity should never depend on someone else's eyes.</blockquote>
+        <cite>The Netra Principle</cite>
+      </div>
+    </section>
+
+    <hr class="rule rule--ultra" />
+
+    <section class="future" id="future" aria-labelledby="future-title">
+      <div class="container">
+        <span class="label">Future Scope</span>
+        <h2 id="future-title">Where Netra goes next.</h2>
+        <div class="future__items">
+          <article class="future__item">
+            <h3>Medicine Label OCR</h3>
+            <p>Integrating Tesseract Optical Character Recognition to read medicine names and dosages aloud, ensuring the right tablet is taken at the right time.</p>
+          </article>
+          <article class="future__item">
+            <h3>GPS Navigation Assistance</h3>
+            <p>Real-time location tracking and spatial audio to help a visually impaired user move safely and confidently through unfamiliar public spaces.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule rule--ultra" />
+
+    <section class="cta" aria-labelledby="cta-title">
+      <div class="container">
+        <h2 id="cta-title">Hear it for yourself.</h2>
+        <a class="btn btn--invert" href="#demo">Try the Live Demo &rarr;</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site">
+    <div class="container footer__inner">
+      <div>
+        <div class="footer__brand">Netra</div>
+        <div class="tags" aria-label="Technology stack">
+          <span class="tag">Python 3</span>
+          <span class="tag">OpenCV</span>
+          <span class="tag">Scikit-learn</span>
+          <span class="tag">Text-to-Speech</span>
+        </div>
+      </div>
+      <p class="footer__meta">
+        Delhi Technological University<br/>
+        Detection of Currency for the Visually Impaired
+      </p>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

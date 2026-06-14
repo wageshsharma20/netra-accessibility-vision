@@ -1,0 +1,16 @@
+# Python environment and cache
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Mac system files
+.DS_Store
+
+# Ignore the massive image dataset (but KEEP the models folder!)
+dataset/
+
+# Ignore uploaded test images
+_upload.jpg
